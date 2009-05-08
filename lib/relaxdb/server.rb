@@ -96,9 +96,12 @@ module RelaxDB
     
     def replicate_db(source, target)
       @logger.info("Replicating from #{source} to #{target}")
-      create_db_if_non_existant target      
-      data = { "source" => source, "target" => target}
-      @server.post("/_replicate", data.to_json)
+      create_db_if_non_existant target
+      data = { "source" => source, "target" => target}.to_json
+
+      # data = %Q({"source":"#{source}","target":"#{target}"}) # needed if db contains a '/'
+      
+      @server.post("/_replicate", data)
     end
 
     def delete(path=nil)
