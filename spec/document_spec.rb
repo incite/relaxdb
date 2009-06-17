@@ -205,7 +205,7 @@ describe RelaxDB::Document do
 
     it "should prevent the object from being resaved" do
       p = Atom.new.save.destroy!
-      # Exepcted failure - see http://issues.apache.org/jira/browse/COUCHDB-292      
+      # Expected failure - see http://issues.apache.org/jira/browse/COUCHDB-292      
       lambda { p.save! }.should raise_error
     end
     
@@ -246,16 +246,23 @@ describe RelaxDB::Document do
   
   describe ".all" do
   
-    it "should return all instances of that class" do
+    # it's not an Enumberable or an Array - it's a delegate to one
+    
+    it "should return a collection with all instances of that class" do
       Photo.new.save
       Rating.new.save
       Rating.new.save
-      Rating.all.size.should == 2      
+      collection = Rating.all
+      collection.size.should == 2
+      collection.length.should == 2
+      collection.should respond_to(:each)
     end
   
-    it "should return an empty array when no instances exist" do
-      Atom.all.should be_an_instance_of(Array)
-      Atom.all.should be_empty
+    it "should return an empty collection when no instances exist" do
+      collection = Atom.all
+      collection.should respond_to(:each)
+      collection.length.should == 0
+      collection.should be_empty
     end
     
   end
