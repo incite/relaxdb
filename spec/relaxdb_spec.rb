@@ -246,10 +246,12 @@ describe RelaxDB do
       }
     >
     
-    it "should request a view and return an array" do
+    it "should request a view and return a collection" do
       RelaxDB::DesignDocument.get(RelaxDB.dd).add_view("simple", "map", map_func).save
       data = RelaxDB.view("simple")
-      data.should be_instance_of(Array)
+      data.should respond_to(:empty?)
+      data.should respond_to(:each)
+      data.should == [] # it's a delegate to an Array
     end
 
     it "may accept query params" do
